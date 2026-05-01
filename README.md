@@ -1,10 +1,23 @@
-# Instructions for candidates
+# Call out
+The module to call Bank is currently mocked, because the simulator can't be launched. 
+(likely due to docker is restricted on the company macbook)
 
-This is the Java version of the Payment Gateway challenge. If you haven't already read this [README.md](https://github.com/cko-recruitment/) on the details of this exercise, please do so now.
+## Future improvements
+1. Setup checkstyle
+2. Use Lombok to simplify model definition. (already partially done)
+3. Define constant, like for string "Page not found"
+4. Improve the unit test coverage
 
 ## Requirements
 - JDK 17
-- Docker
+- Docker (Not needed since hardware limitation)
+
+## High level Design
+
+
+
+
+
 
 ## Template structure
 
@@ -24,8 +37,3 @@ For documentation openAPI is included, and it can be found under the following u
 
 **Feel free to change the structure of the solution, use a different library etc.**
 
-## Future improvements
-1. Implement checkstyle check
-2. Use Lombok to simplify model definition. (like avoid getter/setter)
-3. Implement injection
-4. Define constant, like for string "Page not found"
