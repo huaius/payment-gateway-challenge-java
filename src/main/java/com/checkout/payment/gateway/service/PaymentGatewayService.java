@@ -1,7 +1,10 @@
 package com.checkout.payment.gateway.service;
 
+import com.checkout.payment.bankcommon.model.BankRequest;
+import com.checkout.payment.bankcommon.model.BankResponse;
 import com.checkout.payment.gateway.exception.EventProcessingException;
 import com.checkout.payment.bankclient.AcquiringBankClient;
+import com.checkout.payment.gatewaycommon.model.PaymentStatus;
 import com.checkout.payment.gatewaycommon.model.PostPaymentRequest;
 import com.checkout.payment.gatewaycommon.model.PostPaymentResponse;
 import com.checkout.payment.gateway.repository.PaymentsRepository;
@@ -31,7 +34,43 @@ public class PaymentGatewayService {
     return paymentsRepository.get(id).orElseThrow(() -> new EventProcessingException("Invalid ID"));
   }
 
-  public UUID processPayment(PostPaymentRequest paymentRequest) {
-    return UUID.randomUUID();
+  public PostPaymentResponse processPayment(final PostPaymentRequest paymentRequest) {
+    if (validatePaymentRequest(paymentRequest)) {
+      final BankRequest bankRequest = BankRequest.builder()
+          .cvv(paymentRequest.getCvv())
+          .amount(paymentRequest.getAmount())
+          .expiryDate(paymentRequest.getExpiryDate())
+          .currency(paymentRequest.getCurrency())
+          .cardNumber(paymentRequest.getCardNumber())
+          .build();
+      final BankResponse bankResponse = acquiringBankClient.process(bankRequest);
+      final PostPaymentResponse postPaymentResponse = PostPaymentResponse.builder()
+          .id(UUID.randomUUID())
+          .status(bankResponse.isAuthorized() ? PaymentStatus.AUTHORIZED: PaymentStatus.DECLINED)
+          .amount(paymentRequest.getAmount())
+          .expiryMonth(paymentRequest.getExpiryMonth())
+          .cardNumberLastFour(getLastFourDigits(paymentRequest.getCardNumber()))
+          .currency(paymentRequest.getCurrency())
+          .expiryYear(paymentRequest.getExpiryYear())
+          .build();
+      paymentsRepository.add(postPaymentResponse);
+      return postPaymentResponse;
+    } else {
+      return invalidResponse();
+    }
+  }
+
+  boolean validatePaymentRequest(final PostPaymentRequest paymentRequest) {
+    return true;
+  }
+
+  PostPaymentResponse invalidResponse() {
+    return PostPaymentResponse.builder()
+        .status(PaymentStatus.REJECTED)
+        .build();
+  }
+
+  int getLastFourDigits(final String cardNumber) {
+    return Integer.parseInt(cardNumber.substring(cardNumber.length() - 4));
   }
 }

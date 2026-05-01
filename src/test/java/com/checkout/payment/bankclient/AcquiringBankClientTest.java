@@ -11,7 +11,7 @@ import com.checkout.payment.bankcommon.model.BankResponse;
 import com.checkout.payment.bankcommon.model.ServiceUnavailableException;
 
 class AcquiringBankClientTest {
-  final public static String DUMMY = "DUMMY";
+  final private static String DUMMY = "DUMMY";
 
   private AcquiringBankClient acquiringBankClient;
 

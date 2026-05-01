@@ -1,11 +1,14 @@
 package com.checkout.payment.gatewaycommon.model;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
 
 @Setter
 @Getter
+@Builder
 public class PostPaymentResponse {
   private UUID id;
   private PaymentStatus status;
