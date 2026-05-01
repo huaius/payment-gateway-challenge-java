@@ -2,10 +2,12 @@ package com.checkout.payment.bankclient;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
 import com.checkout.payment.bankcommon.model.BankRequest;
 import com.checkout.payment.bankcommon.model.BankResponse;
 import com.checkout.payment.bankcommon.model.ServiceUnavailableException;
 
+@Component
 public class AcquiringBankClient {
 
   public BankResponse process(final BankRequest bankRequest) {
