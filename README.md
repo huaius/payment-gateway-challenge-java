@@ -1,12 +1,24 @@
-# Call out
-The module to call Bank is currently mocked, because the simulator can't be launched. 
-(likely due to docker is restricted on the company macbook)
+## Call out
+The module to call Bank is currently mocked, because the simulator can't be launched. (likely due to docker is restricted on the company macbook)
 
-## Future improvements
+## Development summary
+### Initial state
+* Query payment endpoint (GET)
+* Repository (save and get historical payment, like DB)
+* Framework (controller, wiring)
+
+### Added functionalities
+* Setup code coverage check and report
+* Use lombok
+* Create new packages for common modules and clients (So new customers can import and onboard easily)
+* Implement the make payment endpoint (POST)
+* Delete redundant GetPaymentResponse
+
+### Future improvements
 1. Setup checkstyle
-2. Use Lombok to simplify model definition. (already partially done)
-3. Define constant, like for string "Page not found"
-4. Improve the unit test coverage
+2. Define constant, like for string "Page not found"
+3. Improve the unit test coverage
+4. cardNumberLastFour is now defined as `int`, not user-friendly if the last 4 digits start with 0 (such as 0012)
 
 ## Requirements
 - JDK 17

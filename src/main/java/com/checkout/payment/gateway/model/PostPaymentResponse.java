@@ -16,7 +16,6 @@ public class PostPaymentResponse {
   private String currency;
   private int amount;
 
-
   @Override
   public String toString() {
     return "GetPaymentResponse{" +
