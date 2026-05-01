@@ -1,13 +1,17 @@
 package com.checkout.payment.gateway.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Calendar;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.checkout.payment.bankclient.AcquiringBankClient;
 import com.checkout.payment.bankcommon.model.BankRequest;
@@ -55,7 +59,7 @@ class PaymentGatewayServiceTest {
   }
 
   @Test
-  void processPaymentWhenZeroInputThenReturnsDeclined() {
+  void processPaymentWhenZeroInputThenException() {
     assertThrows(ServiceUnavailableException.class, () -> {
       final PostPaymentRequest request = createPostPaymentRequest();
       request.setCardNumber("123456789012340");
@@ -64,7 +68,115 @@ class PaymentGatewayServiceTest {
   }
 
   @Test
-  void validatePaymentRequest() {
+  void processPaymentWhenInvalidInputThenReturnsRejected() {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setCardNumber("123456");
+    final PostPaymentResponse response = service.processPayment(request);
+    assertEquals(PaymentStatus.REJECTED, response.getStatus());
+  }
+
+  @Test
+  void validatePaymentRequestWhenValidRequestThenTrue() {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    assertTrue(service.validatePaymentRequest(request));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "  ",
+      "12345",
+      "1234567890123",
+      "12345678901234567890",
+      "1234567890123a"
+  })
+  void validatePaymentRequestWhenInvalidCardNumberRequestThenFalse(final String cardNumber) {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setCardNumber(cardNumber);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @Test
+  void validatePaymentRequestWhenNullCardNumberRequestThenFalse() {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setCardNumber(null);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0,
+      -1,
+      13
+  })
+  void validatePaymentRequestWhenInvalidMonthRequestThenFalse(final int month) {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setExpiryMonth(month);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0,
+      -1,
+      2000
+  })
+  void validatePaymentRequestWhenInvalidYearRequestThenFalse(final int year) {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setExpiryYear(year);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @Test
+  void validatePaymentRequestWhenSameMonthYearRequestThenFalse() {
+    final Calendar calendar = Calendar.getInstance();
+    final int curYear = calendar.get(Calendar.YEAR);
+    final int curMonth = calendar.get(Calendar.MONTH);
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setExpiryYear(curYear);
+    request.setExpiryMonth(curMonth);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {
+      0,
+      -1
+  })
+  void validatePaymentRequestWhenInvalidAmountRequestThenFalse(final int number) {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setAmount(number);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "  ",
+      "ABC"
+  })
+  void validatePaymentRequestWhenInvalidCurrencyRequestThenFalse(final String currency) {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setCurrency(currency);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+      "  ",
+      "12345",
+      "12",
+      "123a"
+  })
+  void validatePaymentRequestWhenInvalidCvvRequestThenFalse(final String cvv) {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setCvv(cvv);
+    assertFalse(service.validatePaymentRequest(request));
+  }
+
+  @Test
+  void validatePaymentRequestWhenNullCvvRequestThenFalse() {
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setCvv(null);
+    assertFalse(service.validatePaymentRequest(request));
   }
 
   PostPaymentRequest createPostPaymentRequest() {

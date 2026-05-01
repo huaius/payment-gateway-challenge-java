@@ -75,7 +75,7 @@ class PaymentGatewayControllerTest {
         )
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value(PaymentStatus.AUTHORIZED.getName()))
-        .andExpect(jsonPath("$.cardNumberLastFour").value(6789))
+        .andExpect(jsonPath("$.cardNumberLastFour").value(2345))
         .andExpect(jsonPath("$.expiryMonth").value(request.getExpiryMonth()))
         .andExpect(jsonPath("$.expiryYear").value(request.getExpiryYear()))
         .andExpect(jsonPath("$.currency").value(request.getCurrency()))
@@ -94,7 +94,7 @@ class PaymentGatewayControllerTest {
 
   PostPaymentRequest createPostPaymentRequest() {
     return PostPaymentRequest.builder()
-        .cardNumber("123456789")
+        .cardNumber("123456789012345")
         .amount(10)
         .cvv("1234")
         .currency(USD)

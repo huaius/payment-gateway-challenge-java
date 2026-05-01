@@ -16,11 +16,12 @@ The module to call Bank is currently mocked, because the simulator can't be laun
 * Delete redundant GetPaymentResponse
 
 ### Future improvements
-1. Setup checkstyle
-2. Define constant, like for string "Page not found"
-3. Improve the unit test coverage to 95+% (currently 75%)
-4. Retry when Bank returns `Service Unavailable`
-5. cardNumberLastFour is now defined as `int`, not user-friendly if the last 4 digits start with 0 (such as 0012)
+1. Setup checkstyle.
+2. Define constant, like for string "Page not found".
+3. Improve the unit test coverage to 95+% (currently 81%)
+4. Retry when Bank returns `Service Unavailable`.
+5. cardNumberLastFour is now defined as `int`, not user-friendly if the last 4 digits start with 0 (such as 0012).
+6. Add a `Reject reason` attribute in the response, so that requester knows the reason.
 
 ## Requirements
 - JDK 17
