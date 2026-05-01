@@ -1,20 +1,19 @@
-package com.checkout.payment.gateway.model;
+package com.checkout.payment.bankcommon.model;
+
+import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import java.io.Serializable;
 
 @Setter
 @Getter
-public class PostPaymentRequest implements Serializable {
+public class BankRequest implements Serializable {
 
   @JsonProperty("card_number")
   private int cardNumber;
-  @JsonProperty("expiry_month")
-  private int expiryMonth;
-  @JsonProperty("expiry_year")
-  private int expiryYear;
+  @JsonProperty("expiry_date")
+  private int expiryDate;
   @JsonProperty("currency")
   private String currency;
   @JsonProperty("amount")
@@ -23,17 +22,11 @@ public class PostPaymentRequest implements Serializable {
   @JsonProperty("cvv")
   private String cvv;
 
-  @JsonProperty("expiry_date")
-  public String getExpiryDate() {
-    return String.format("%d/%d", expiryMonth, expiryYear);
-  }
-
   @Override
   public String toString() {
     return "PostPaymentRequest{" +
         "cardNumber=" + cardNumber +
-        ", expiryMonth=" + expiryMonth +
-        ", expiryYear=" + expiryYear +
+        ", expiryDate=" + expiryDate +
         ", currency='" + currency + '\'' +
         ", amount=" + amount +
         ", cvv=" + cvv +
