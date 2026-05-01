@@ -4,13 +4,13 @@ package com.checkout.payment.gateway.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.checkout.payment.bankclient.AcquiringBankClient;
 import com.checkout.payment.gatewaycommon.model.PaymentStatus;
 import com.checkout.payment.gatewaycommon.model.PostPaymentRequest;
 import com.checkout.payment.gatewaycommon.model.PostPaymentResponse;
 import com.checkout.payment.gateway.repository.PaymentsRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
@@ -29,8 +30,6 @@ class PaymentGatewayControllerTest {
   private MockMvc mvc;
   @Autowired
   PaymentsRepository paymentsRepository;
-  @Autowired
-  AcquiringBankClient acquiringBankClient;
 
   @Test
   void whenPaymentWithIdExistThenCorrectPaymentIsReturned() throws Exception {
@@ -66,9 +65,10 @@ class PaymentGatewayControllerTest {
   @Test
   void whenProcessPaymentWithValidInfoThenCorrectPaymentIsReturned() throws Exception {
     final PostPaymentRequest request = createPostPaymentRequest();
-    final String content = new ObjectMapper().writeValueAsString(request);
+    final ObjectMapper mapper = new ObjectMapper();
+    final String content = mapper.writeValueAsString(request);
 
-    mvc.perform(MockMvcRequestBuilders.post("/payment")
+    final MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/payment")
             .content(content)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
@@ -79,7 +79,17 @@ class PaymentGatewayControllerTest {
         .andExpect(jsonPath("$.expiryMonth").value(request.getExpiryMonth()))
         .andExpect(jsonPath("$.expiryYear").value(request.getExpiryYear()))
         .andExpect(jsonPath("$.currency").value(request.getCurrency()))
-        .andExpect(jsonPath("$.amount").value(request.getAmount()));
+        .andExpect(jsonPath("$.amount").value(request.getAmount()))
+        .andReturn();
+
+    // Now query the same payment
+    final String resultContent = result.getResponse().getContentAsString();
+    final JSONObject jsonObject = new JSONObject(resultContent);
+    final String id = (String) jsonObject.get("id");
+    final String status = (String) jsonObject.get("status");
+    mvc.perform(MockMvcRequestBuilders.get("/payment/" + id))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value(status));
   }
 
   PostPaymentRequest createPostPaymentRequest() {

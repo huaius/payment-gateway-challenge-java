@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 class PaymentGatewayServiceTest {
 
+  private PaymentGatewayService service;
+
   @BeforeEach
   void setUp() {
   }
