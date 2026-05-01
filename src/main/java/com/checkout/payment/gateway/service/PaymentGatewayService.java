@@ -1,8 +1,8 @@
 package com.checkout.payment.gateway.service;
 
 import com.checkout.payment.gateway.exception.EventProcessingException;
-import com.checkout.payment.gateway.model.PostPaymentRequest;
-import com.checkout.payment.gateway.model.PostPaymentResponse;
+import com.checkout.payment.gatewaycommon.model.PostPaymentRequest;
+import com.checkout.payment.gatewaycommon.model.PostPaymentResponse;
 import com.checkout.payment.gateway.repository.PaymentsRepository;
 import java.util.UUID;
 import org.slf4j.Logger;

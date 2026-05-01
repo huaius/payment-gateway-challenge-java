@@ -1,6 +1,5 @@
-package com.checkout.payment.gateway.model;
+package com.checkout.payment.gatewaycommon.model;
 
-import com.checkout.payment.gateway.enums.PaymentStatus;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.UUID;

@@ -21,7 +21,7 @@ class AcquiringBankClientTest {
   }
 
   @Test
-  void whenPaymentWithOddThenAuthorisedIsReturned() {
+  void whenCardNumberEndsWithOddThenAuthorisedIsReturned() {
     final BankRequest bankRequest = createBankResponse();
     bankRequest.setCardNumber("1111");
     final BankResponse bankResponse = acquiringBankClient.process(bankRequest);
@@ -29,7 +29,7 @@ class AcquiringBankClientTest {
   }
 
   @Test
-  void whenPaymentWithEvenThenNotAuthorisedIsReturned() {
+  void whenCardNumberEndsWithEvenThenNotAuthorisedIsReturned() {
     final BankRequest bankRequest = createBankResponse();
     bankRequest.setCardNumber("1112");
     final BankResponse bankResponse = acquiringBankClient.process(bankRequest);
@@ -37,7 +37,7 @@ class AcquiringBankClientTest {
   }
 
   @Test
-  void whenPaymentWithOddThenExceptionIsThrown() {
+  void whenCardNumberEndsWithZeroThenExceptionIsThrown() {
     assertThrows(ServiceUnavailableException.class, () -> {
       final BankRequest bankRequest = createBankResponse();
       bankRequest.setCardNumber("1110");
