@@ -18,7 +18,8 @@ The module to call Bank is currently mocked, because the simulator can't be laun
 1. Setup checkstyle
 2. Define constant, like for string "Page not found"
 3. Improve the unit test coverage
-4. cardNumberLastFour is now defined as `int`, not user-friendly if the last 4 digits start with 0 (such as 0012)
+4. Retry when Bank returns `Service Unavailable`
+5. cardNumberLastFour is now defined as `int`, not user-friendly if the last 4 digits start with 0 (such as 0012)
 
 ## Requirements
 - JDK 17

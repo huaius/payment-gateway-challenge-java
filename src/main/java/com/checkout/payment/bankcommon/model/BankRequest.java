@@ -3,17 +3,19 @@ package com.checkout.payment.bankcommon.model;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
+@Builder
 public class BankRequest implements Serializable {
 
   @JsonProperty("card_number")
-  private int cardNumber;
+  private String cardNumber;
   @JsonProperty("expiry_date")
-  private int expiryDate;
+  private String expiryDate;
   @JsonProperty("currency")
   private String currency;
   @JsonProperty("amount")
