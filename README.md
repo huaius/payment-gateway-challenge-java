@@ -11,13 +11,14 @@ The module to call Bank is currently mocked, because the simulator can't be laun
 * Setup code coverage check and report
 * Use lombok
 * Create new packages for common modules and clients (So new customers can import and onboard easily)
-* Implement the make payment endpoint (POST)
+* Implement the make payment endpoint, request validation (POST)
+* Unit tests
 * Delete redundant GetPaymentResponse
 
 ### Future improvements
 1. Setup checkstyle
 2. Define constant, like for string "Page not found"
-3. Improve the unit test coverage
+3. Improve the unit test coverage to 95+% (currently 75%)
 4. Retry when Bank returns `Service Unavailable`
 5. cardNumberLastFour is now defined as `int`, not user-friendly if the last 4 digits start with 0 (such as 0012)
 
@@ -25,10 +26,10 @@ The module to call Bank is currently mocked, because the simulator can't be laun
 - JDK 17
 - Docker (Not needed since hardware limitation)
 
-## High level Design
+## Requirement analysis and Design
 
-
-
+Refer to following diagram
+![image](https://github.com/huaius/payment-gateway-challenge-java/blob/main/src/main/resources/payment.png?raw=true)
 
 
 
