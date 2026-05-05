@@ -137,6 +137,20 @@ class PaymentGatewayServiceTest {
     assertFalse(service.validatePaymentRequest(request));
   }
 
+  @Test
+  void validatePaymentRequestWhenSetYearAsMonthRequestThenFalse() {
+    final Calendar calendar = Calendar.getInstance();
+    //final int curYear = calendar.get(Calendar.YEAR);
+    final int curMonth = calendar.get(Calendar.MONTH);
+    final PostPaymentRequest request = createPostPaymentRequest();
+    request.setExpiryYear(curMonth);
+    final int nextMonth = curMonth + 1;
+    if (nextMonth < 13) {
+      request.setExpiryMonth(curMonth + 1);
+      assertFalse(service.validatePaymentRequest(request));
+    }
+  }
+
   @ParameterizedTest
   @ValueSource(ints = {
       0,

@@ -111,7 +111,7 @@ public class PaymentGatewayService {
       final Calendar calendar = Calendar.getInstance();
       final int curYear = calendar.get(Calendar.YEAR);
       final int curMonth = calendar.get(Calendar.MONTH);
-      if (year > curYear || (year == curMonth && month > curMonth)) {
+      if (year > curYear || (year == curYear && month > curMonth)) {
         return true;
       }
     }
